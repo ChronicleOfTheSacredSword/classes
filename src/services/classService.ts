@@ -1,6 +1,7 @@
 import { Class } from '../domain/class';
 import { ClassRepositoryPort } from "../ports/driven/classRepositoryPort";
 import { ClassPort } from "../ports/driving/classPort";
+import { sendLogMessage } from './sendLogMessage';
 
 export class ClassService implements ClassPort {
   	constructor(private repo: ClassRepositoryPort) {}
@@ -14,16 +15,32 @@ export class ClassService implements ClassPort {
 	}
   
 	async createClass(input: Omit<Class, 'id'>): Promise<Class> {
-		if(input.name.length || input.pv <= 0 || input.gold < 0 || input.atk <= 0){
+		if (
+			!input.id_hero ||
+			input.name.length === 0 ||
+			input.pv <= 0 ||
+			input.gold < 0 ||
+			input.atk <= 0
+		) {
 			throw new Error('Input invalid');
 		}
 
-		const isUsernameValid = await this.checkClassName(input);
-		if (!isUsernameValid) {
-			throw new Error('Username already exists');
+		const isClassNameValid = await this.checkClassName(input);
+		if (!isClassNameValid) {
+			throw new Error('Class name already exists');
 		}
 
-		return this.repo.save(input);
+		const result = await this.repo.save(input);
+
+		sendLogMessage({
+			id_hero: input.id_hero,
+			content: `The hero ${input.id_hero} created a new Classes ${result.id}-${result.name}.`
+		}).catch(err => {
+			console.error("RabbitMQ log failed:", err.message);
+		});
+
+
+		return result;
 	}
 
 	async checkClassName(input: Omit<Class, 'id'>): Promise<Boolean> {

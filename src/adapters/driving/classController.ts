@@ -31,6 +31,7 @@ export class ClassController {
 			const classBuffer = await this.service_class.createClass(req.body);
 			return res.status(201).json(classBuffer);
 		} catch (error: any) {
+			console.error(error);
 			if (error.message === 'Class name already exists') {
 				return res.status(409).json({ message: error.message });
 			}

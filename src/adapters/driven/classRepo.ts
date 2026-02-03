@@ -8,6 +8,7 @@ export class ClassRepo implements ClassRepositoryPort {
 			`
 			SELECT
 				id,
+				id_hero,
 				name,
 				pv,
 				gold,
@@ -26,6 +27,7 @@ export class ClassRepo implements ClassRepositoryPort {
 			`
 			SELECT
 				id,
+				id_hero,
 				name,
 				pv,
 				gold,
@@ -44,6 +46,7 @@ export class ClassRepo implements ClassRepositoryPort {
 			`
 			SELECT
 				id,
+				id_hero,
 				name,
 				pv,
 				gold,
@@ -59,20 +62,23 @@ export class ClassRepo implements ClassRepositoryPort {
 		const res = await pool.query(
 			`
 			INSERT INTO classes (
+				id_hero,
 				name,
 				pv,
 				gold,
 				atk
 			)
-			VALUES ($1, $2)
+			VALUES ($1, $2, $3, $4, $5)
 			RETURNING
 				id,
+				id_hero,
 				name,
 				pv,
 				gold,
 				atk
 			`,
 			[
+				Class.id_hero,
 				Class.name,
 				Class.pv,
 				Class.gold,
