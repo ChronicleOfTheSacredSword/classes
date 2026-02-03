@@ -7,7 +7,11 @@ import { ClassController } from './adapters/driving/classController';
 
 dotenv.config();
 
+const cors = require('cors');
 const app = express();
+app.use(express.json());
+app.use(cors({ origin: 'http://localhost:9000' }));
+
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
