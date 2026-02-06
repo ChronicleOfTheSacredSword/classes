@@ -18,7 +18,6 @@ export async function sendLogMessage(message: Logs): Promise<void> {
             contentType: "application/json",
         });
 
-        console.log("Message sent:", message);
     } finally {
         setTimeout(async () => {
             await channel.close();
