@@ -16,7 +16,7 @@ export class ClassService implements ClassPort {
   
 	async createClass(input: Omit<Class, 'id'>): Promise<Class> {
 		if (
-			!input.id_hero ||
+			input.id_hero === undefined ||
 			input.name.length === 0 ||
 			input.pv <= 0 ||
 			input.gold < 0 ||
